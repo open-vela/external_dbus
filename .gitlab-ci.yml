@@ -82,7 +82,7 @@ build:cmake:
   stage: build
   image: "debian:stretch-slim"
   variables:
-    ci_buildsys: "cmake-dist"
+    ci_buildsys: "cmake"
   script: *script
 
 build:i686-w64-mingw32-debug:
