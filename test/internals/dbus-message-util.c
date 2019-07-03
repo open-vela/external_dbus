@@ -46,8 +46,6 @@
 
 #include "dbus-message-factory.h"
 
-#include "test/test-utils.h"
-
 #ifdef DBUS_ENABLE_EMBEDDED_TESTS
 /**
  * Reads arguments from a message iterator given a variable argument
@@ -884,8 +882,7 @@ verify_test_message (DBusMessage *message)
 }
 
 static void
-verify_test_message_args_ignored (DBusMessage *message,
-                                  const char  *context)
+verify_test_message_args_ignored (DBusMessage *message)
 {
   DBusMessageIter iter;
   DBusError error = DBUS_ERROR_INIT;
@@ -923,12 +920,11 @@ verify_test_message_args_ignored (DBusMessage *message,
       _dbus_verbose ("arguments ignored.\n");
     }
 
-  _dbus_check_fdleaks_leave (initial_fds, context);
+  _dbus_check_fdleaks_leave (initial_fds);
 }
 
 static void
-verify_test_message_memleak (DBusMessage *message,
-                             const char  *context)
+verify_test_message_memleak (DBusMessage *message)
 {
   DBusMessageIter iter;
   DBusError error = DBUS_ERROR_INIT;
@@ -1038,7 +1034,7 @@ verify_test_message_memleak (DBusMessage *message,
       _dbus_close (our_unix_fd2, &error);
 #endif
     }
-  _dbus_check_fdleaks_leave (initial_fds, context);
+  _dbus_check_fdleaks_leave (initial_fds);
 }
 
 /**
@@ -1503,7 +1499,7 @@ _dbus_message_test (const char *test_data_dir _DBUS_GNUC_UNUSED)
   _dbus_message_loader_unref (loader);
 
   check_memleaks ();
-  _dbus_check_fdleaks_leave (initial_fds, _DBUS_FILE_LINE);
+  _dbus_check_fdleaks_leave (initial_fds);
   initial_fds = _dbus_check_fdleaks_enter ();
 
   /* Test enumeration of array elements */
@@ -1625,8 +1621,8 @@ _dbus_message_test (const char *test_data_dir _DBUS_GNUC_UNUSED)
 
   _dbus_assert (i < (int) _DBUS_N_ELEMENTS (sig));
 
-  verify_test_message_args_ignored (message, _DBUS_FILE_LINE);
-  verify_test_message_memleak (message, _DBUS_FILE_LINE);
+  verify_test_message_args_ignored (message);
+  verify_test_message_memleak (message);
 
   dbus_message_unref (message);
 
@@ -1662,7 +1658,7 @@ _dbus_message_test (const char *test_data_dir _DBUS_GNUC_UNUSED)
   }
 
   check_memleaks ();
-  _dbus_check_fdleaks_leave (initial_fds, _DBUS_FILE_LINE);
+  _dbus_check_fdleaks_leave (initial_fds);
 
   /* Now load every message in test_data_dir if we have one */
   if (test_data_dir == NULL)
@@ -1673,7 +1669,7 @@ _dbus_message_test (const char *test_data_dir _DBUS_GNUC_UNUSED)
   if (!foreach_message_file (test_data_dir, try_message_file, NULL))
     _dbus_test_fatal ("foreach_message_file test failed");
 
-  _dbus_check_fdleaks_leave (initial_fds, _DBUS_FILE_LINE);
+  _dbus_check_fdleaks_leave (initial_fds);
 
   return TRUE;
 }
