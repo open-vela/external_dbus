@@ -28,7 +28,6 @@
 
 #include <dbus/dbus-test-tap.h>
 
-#include "bus/audit.h"
 #include "bus/selinux.h"
 #include "test/test-utils.h"
 
@@ -46,8 +45,6 @@ test_post_hook (void)
 {
   if (_dbus_getenv ("DBUS_TEST_SELINUX"))
     bus_selinux_shutdown ();
-
-  bus_audit_shutdown ();
 }
 
 static DBusTestCase tests[] =

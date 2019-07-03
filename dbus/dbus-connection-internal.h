@@ -136,7 +136,8 @@ void _dbus_connection_get_stats (DBusConnection *connection,
                                  dbus_uint32_t  *out_peak_fds);
 
 
-DBUS_EMBEDDED_TESTS_EXPORT
+/* if DBUS_ENABLE_EMBEDDED_TESTS */
+DBUS_PRIVATE_EXPORT
 const char* _dbus_connection_get_address (DBusConnection *connection);
 
 /* This _dbus_bus_* stuff doesn't really belong here, but dbus-bus-internal.h seems
