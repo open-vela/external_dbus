@@ -35,12 +35,6 @@
 
 DBUS_BEGIN_DECLS
 
-#ifdef DBUS_ENABLE_EMBEDDED_TESTS
-#define DBUS_EMBEDDED_TESTS_EXPORT DBUS_PRIVATE_EXPORT
-#else
-#define DBUS_EMBEDDED_TESTS_EXPORT /* nothing */
-#endif
-
 DBUS_PRIVATE_EXPORT
 void _dbus_warn               (const char *format,
                                ...) _DBUS_GNUC_PRINTF (1, 2);
@@ -458,6 +452,9 @@ dbus_bool_t _dbus_get_local_machine_uuid_encoded (DBusString *uuid_str,
 #define _DBUS_STATIC_ASSERT(expr) \
   typedef struct { char _assertion[(expr) ? 1 : -1]; } \
   _DBUS_PASTE (_DBUS_STATIC_ASSERT_, __LINE__) _DBUS_GNUC_UNUSED
+
+#define _DBUS_STRINGIFY(x) #x
+#define _DBUS_FILE_LINE __FILE__ ":" _DBUS_STRINGIFY(__LINE__)
 
 DBUS_END_DECLS
 
