@@ -74,15 +74,12 @@
 # define BROKEN_POLL
 #endif
 
-/* Normally we'd only include this in dbus-sysdeps-unix.c.
- * However, the member names in DBusPollFD are (deliberately) the same as
- * in POSIX struct pollfd, and AIX's poll() implementation is known to
- * do things like "#define events reqevents", which would break that approach.
- * Defend against that by ensuring that if it's renamed anywhere, it's renamed
- * everywhere.
- */
+/* AIX sys/poll.h does #define events reqevents, and other
+ * wonderousness, so must include sys/poll before declaring
+ * DBusPollFD
+ */ 
 #ifdef HAVE_POLL
-#include <poll.h>
+#include <sys/poll.h>
 #endif
 
 #ifdef DBUS_WINCE
