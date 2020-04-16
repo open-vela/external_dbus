@@ -54,10 +54,6 @@ NULL=
 # Typical values for ci_distro=fedora might be 25, rawhide
 : "${ci_suite:=xenial}"
 
-# ci_variant:
-# One of debug, reduced, legacy, production
-: "${ci_variant:=production}"
-
 if [ $(id -u) = 0 ]; then
     sudo=
 else
@@ -122,12 +118,6 @@ case "$ci_distro" in
                     ${NULL}
                 ;;
         esac
-
-        if [ "$ci_host/$ci_variant/$ci_suite" = "native/production/buster" ]; then
-            $sudo apt-get -qq -y --no-install-recommends install \
-                qttools5-dev-tools \
-                ${NULL}
-        fi
 
         $sudo apt-get -qq -y --no-install-recommends install \
             adduser \
