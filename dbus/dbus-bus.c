@@ -559,7 +559,11 @@ DBusConnection *
 dbus_bus_get (DBusBusType  type,
 	      DBusError   *error)
 {
+#ifdef __NuttX__
+  return internal_bus_get (type, TRUE, error);
+#else
   return internal_bus_get (type, FALSE, error);
+#endif
 }
 
 /**
