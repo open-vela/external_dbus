@@ -5062,8 +5062,10 @@ _dbus_init_system_log (const char   *tag,
 #ifdef HAVE_SYSLOG_H
   log_flags = flags;
 
+#ifdef HAVE_OPENLOG
   if (log_flags & DBUS_LOG_FLAGS_SYSTEM_LOG)
     openlog (tag, LOG_PID, LOG_DAEMON);
+#endif
 #endif
 }
 
