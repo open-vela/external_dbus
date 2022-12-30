@@ -501,8 +501,10 @@ _dbus_rlimit_restore_fd_limit (DBusRLimit *saved,
 static void
 fd_limit_not_supported (DBusError *error)
 {
+#ifndef __NuttX__
   dbus_set_error (error, DBUS_ERROR_NOT_SUPPORTED,
                   "cannot change fd limit on this platform");
+#endif
 }
 
 DBusRLimit *

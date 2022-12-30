@@ -1276,8 +1276,10 @@ _dbus_listen_unix_socket (const char     *path,
   /* Try opening up the permissions, but if we can't, just go ahead
    * and continue, maybe it will be good enough.
    */
+#ifndef __NuttX__
   if (!abstract && chmod (path, 0777) < 0)
     _dbus_warn ("Could not set mode 0777 on socket %s", path);
+#endif
 
   s.fd = listen_fd;
   return s;
@@ -5114,11 +5116,13 @@ _dbus_logv (DBusSystemLogSeverity  severity,
   if (log_flags & DBUS_LOG_FLAGS_STDERR)
 #endif
     {
+#ifndef __NuttX__
       va_copy (tmp, args);
       fprintf (stderr, "%s[" DBUS_PID_FORMAT "]: ", syslog_tag, _dbus_getpid ());
       vfprintf (stderr, msg, tmp);
       fputc ('\n', stderr);
       va_end (tmp);
+#endif
     }
 }
 
