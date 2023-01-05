@@ -708,8 +708,10 @@ raise_file_descriptor_limit (BusContext      *context)
 
   if (context->initial_fd_limit == NULL)
     {
+#ifndef __NuttX__
       bus_context_log (context, DBUS_SYSTEM_LOG_WARNING,
                        "%s: %s", error.name, error.message);
+#endif
       dbus_error_free (&error);
       return;
     }
