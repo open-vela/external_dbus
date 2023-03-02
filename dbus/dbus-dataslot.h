@@ -75,9 +75,9 @@ struct DBusDataSlotList
 dbus_bool_t _dbus_data_slot_allocator_init  (DBusDataSlotAllocator  *allocator,
                                              DBusGlobalLock          lock);
 dbus_bool_t _dbus_data_slot_allocator_alloc (DBusDataSlotAllocator  *allocator,
-                                             int                    *slot_id_p);
+                                             dbus_int32_t           *slot_id_p);
 void        _dbus_data_slot_allocator_free  (DBusDataSlotAllocator  *allocator,
-                                             int                    *slot_id_p);
+                                             dbus_int32_t           *slot_id_p);
 void        _dbus_data_slot_list_init       (DBusDataSlotList       *list);
 dbus_bool_t _dbus_data_slot_list_set        (DBusDataSlotAllocator  *allocator,
                                              DBusDataSlotList       *list,
