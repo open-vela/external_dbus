@@ -2625,7 +2625,11 @@ dbus_connection_open (const char     *address,
   _dbus_return_val_if_error_is_set (error, NULL);
 
   connection = _dbus_connection_open_internal (address,
+#ifdef __NuttX__
+                                               FALSE,
+#else
                                                TRUE,
+#endif
                                                error);
 
   return connection;
@@ -2819,6 +2823,14 @@ dbus_connection_unref (DBusConnection *connection)
 
   _dbus_return_if_fail (connection != NULL);
   _dbus_return_if_fail (connection->generation == _dbus_current_generation);
+
+#ifdef __NuttX__
+  if (_dbus_atomic_get(&connection->refcount) == 1 &&
+      _dbus_transport_get_is_connected (connection->transport))
+    {
+      dbus_connection_close (connection);
+    }
+#endif
 
   old_refcount = _dbus_atomic_dec (&connection->refcount);
 
