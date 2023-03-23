@@ -1400,7 +1400,7 @@ _dbus_transport_get_unix_process_id (DBusTransport *transport,
 dbus_bool_t
 _dbus_transport_get_adt_audit_session_data (DBusTransport      *transport,
                                             void              **data,
-                                            int                *data_size)
+                                            dbus_int32_t       *data_size)
 {
   DBusCredentials *auth_identity;
 
