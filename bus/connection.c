@@ -1746,7 +1746,7 @@ bus_connections_check_limits (BusConnections  *connections,
 static void
 bus_pending_reply_free (BusPendingReply *pending)
 {
-  _dbus_verbose ("Freeing pending reply %p, replier %p receiver %p serial %u\n",
+  _dbus_verbose ("Freeing pending reply %p, replier %p receiver %p serial %"PRIu32"\n",
                  pending,
                  pending->will_send_reply,
                  pending->will_get_reply,
@@ -1816,7 +1816,7 @@ bus_pending_reply_expired (BusExpireList *list,
    * get more memory.
    */
 
-  _dbus_verbose ("Expiring pending reply %p, replier %p receiver %p serial %u\n",
+  _dbus_verbose ("Expiring pending reply %p, replier %p receiver %p serial %"PRIu32"\n",
                  pending,
                  pending->will_send_reply,
                  pending->will_get_reply,
@@ -1868,7 +1868,7 @@ bus_connection_drop_pending_replies (BusConnections  *connections,
         {
           /* We don't need to track this pending reply anymore */
 
-          _dbus_verbose ("Dropping pending reply %p, replier %p receiver %p serial %u\n",
+          _dbus_verbose ("Dropping pending reply %p, replier %p receiver %p serial %"PRIu32"\n",
                          pending,
                          pending->will_send_reply,
                          pending->will_get_reply,
@@ -1883,7 +1883,7 @@ bus_connection_drop_pending_replies (BusConnections  *connections,
           /* The reply isn't going to be sent, so set things
            * up so it will be expired right away
            */
-          _dbus_verbose ("Will expire pending reply %p, replier %p receiver %p serial %u\n",
+          _dbus_verbose ("Will expire pending reply %p, replier %p receiver %p serial %"PRIu32"\n",
                          pending,
                          pending->will_send_reply,
                          pending->will_get_reply,
@@ -2053,7 +2053,7 @@ bus_connections_expect_reply (BusConnections  *connections,
   _dbus_get_monotonic_time (&pending->expire_item.added_tv_sec,
                             &pending->expire_item.added_tv_usec);
 
-  _dbus_verbose ("Added pending reply %p, replier %p receiver %p serial %u\n",
+  _dbus_verbose ("Added pending reply %p, replier %p receiver %p serial %"PRIu32"\n",
                  pending,
                  pending->will_send_reply,
                  pending->will_get_reply,
@@ -2131,7 +2131,7 @@ bus_connections_check_reply (BusConnections *connections,
           pending->will_get_reply == receiving_reply &&
           pending->will_send_reply == sending_reply)
         {
-          _dbus_verbose ("Found pending reply with serial %u\n", reply_serial);
+          _dbus_verbose ("Found pending reply with serial %"PRIu32"\n", reply_serial);
           break;
         }
       

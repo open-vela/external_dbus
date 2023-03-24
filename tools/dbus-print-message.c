@@ -376,7 +376,7 @@ print_iter (DBusMessageIter *iter, dbus_bool_t literal, int depth)
           {
             dbus_int32_t val;
             dbus_message_iter_get_basic (iter, &val);
-            printf ("int32 %d\n", val);
+            printf ("int32 %"PRIi32"\n", val);
             break;
           }
 
@@ -384,7 +384,7 @@ print_iter (DBusMessageIter *iter, dbus_bool_t literal, int depth)
           {
             dbus_uint32_t val;
             dbus_message_iter_get_basic (iter, &val);
-            printf ("uint32 %u\n", val);
+            printf ("uint32 %"PRIu32"\n", val);
             break;
           }
 
@@ -561,7 +561,7 @@ print_message (DBusMessage *message, dbus_bool_t literal, long sec, long usec)
         {
         case DBUS_MESSAGE_TYPE_METHOD_CALL:
         case DBUS_MESSAGE_TYPE_SIGNAL:
-          printf (" serial=%u path=%s; interface=%s; member=%s\n",
+          printf (" serial=%"PRIu32" path=%s; interface=%s; member=%s\n",
                   dbus_message_get_serial (message),
                   dbus_message_get_path (message),
                   dbus_message_get_interface (message),
@@ -569,13 +569,13 @@ print_message (DBusMessage *message, dbus_bool_t literal, long sec, long usec)
           break;
       
         case DBUS_MESSAGE_TYPE_METHOD_RETURN:
-          printf (" serial=%u reply_serial=%u\n",
+          printf (" serial=%"PRIu32" reply_serial=%"PRIu32"\n",
                   dbus_message_get_serial (message),
           dbus_message_get_reply_serial (message));
           break;
 
         case DBUS_MESSAGE_TYPE_ERROR:
-          printf (" error_name=%s reply_serial=%u\n",
+          printf (" error_name=%s reply_serial=%"PRIu32"\n",
                   dbus_message_get_error_name (message),
           dbus_message_get_reply_serial (message));
           break;
