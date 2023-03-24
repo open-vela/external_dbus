@@ -132,7 +132,7 @@ _dbus_data_slot_allocator_alloc (DBusDataSlotAllocator *allocator,
   
   *slot_id_p = slot;
   
-  _dbus_verbose ("Allocated slot %d on allocator %p total %d slots allocated %d used\n",
+  _dbus_verbose ("Allocated slot %"PRIi32" on allocator %p total %d slots allocated %d used\n",
                  slot, allocator, allocator->n_allocated_slots, allocator->n_used_slots);
   
  out:
@@ -172,7 +172,7 @@ _dbus_data_slot_allocator_free (DBusDataSlotAllocator *allocator,
     }
 
   /* refcount is 0, free the slot */
-  _dbus_verbose ("Freeing slot %d on allocator %p total %d allocated %d used\n",
+  _dbus_verbose ("Freeing slot %"PRIi32" on allocator %p total %d allocated %d used\n",
                  *slot_id_p, allocator, allocator->n_allocated_slots, allocator->n_used_slots);
   
   allocator->allocated_slots[*slot_id_p].slot_id = -1;

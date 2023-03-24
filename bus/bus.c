@@ -1633,7 +1633,7 @@ complain_about_message (BusContext     *context,
   dbus_set_error (&stack_error, error_name,
       "%s, %d matched rules; type=\"%s\", sender=\"%s\" (%s) "
       "interface=\"%s\" member=\"%s\" error name=\"%s\" "
-      "requested_reply=\"%d\" destination=\"%s\" (%s)",
+      "requested_reply=\"%"PRIi32"\" destination=\"%s\" (%s)",
       complaint,
       matched_rules,
       dbus_message_type_to_string (dbus_message_get_type (message)),

@@ -748,7 +748,7 @@ _dbus_header_have_message_untrusted (int                max_message_length,
 
   *validity = DBUS_VALID;
 
-  _dbus_verbose ("have %d bytes, need body %u + header %u = %u\n",
+  _dbus_verbose ("have %d bytes, need body %"PRIu32" + header %"PRIu32" = %"PRIu32"\n",
                  len, body_len_unsigned, header_len_unsigned,
                  body_len_unsigned + header_len_unsigned);
 

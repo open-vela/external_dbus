@@ -550,7 +550,7 @@ validate_body_helper (DBusTypeReader       *reader,
 
             ++p;
 
-            _dbus_verbose ("p = %p end = %p claimed_len %u\n", p, end, claimed_len);
+            _dbus_verbose ("p = %p end = %p claimed_len %"PRIu32"\n", p, end, claimed_len);
           }
           break;
 

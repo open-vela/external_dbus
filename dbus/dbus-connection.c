@@ -512,7 +512,7 @@ _dbus_connection_queue_received_message_link (DBusConnection  *connection,
 
   _dbus_connection_wakeup_mainloop (connection);
   
-  _dbus_verbose ("Message %p (%s %s %s %s '%s' reply to %u) added to incoming queue %p, %d incoming\n",
+  _dbus_verbose ("Message %p (%s %s %s %s '%s' reply to %"PRIu32") added to incoming queue %p, %d incoming\n",
                  message,
                  dbus_message_type_to_string (dbus_message_get_type (message)),
                  dbus_message_get_path (message) ?
@@ -1074,7 +1074,7 @@ _dbus_connection_acquire_io_path (DBusConnection *connection,
   _dbus_verbose ("locking io_path_mutex\n");
   _dbus_cmutex_lock (connection->io_path_mutex);
 
-  _dbus_verbose ("start connection->io_path_acquired = %d timeout = %d\n",
+  _dbus_verbose ("start connection->io_path_acquired = %"PRIu32" timeout = %d\n",
                  connection->io_path_acquired, timeout_milliseconds);
 
   we_acquired = FALSE;
@@ -1117,7 +1117,7 @@ _dbus_connection_acquire_io_path (DBusConnection *connection,
       connection->io_path_acquired = TRUE;
     }
   
-  _dbus_verbose ("end connection->io_path_acquired = %d we_acquired = %d\n",
+  _dbus_verbose ("end connection->io_path_acquired = %"PRIu32" we_acquired = %"PRIu32"\n",
                  connection->io_path_acquired, we_acquired);
 
   _dbus_verbose ("unlocking io_path_mutex\n");
@@ -1149,7 +1149,7 @@ _dbus_connection_release_io_path (DBusConnection *connection)
   
   _dbus_assert (connection->io_path_acquired);
 
-  _dbus_verbose ("start connection->io_path_acquired = %d\n",
+  _dbus_verbose ("start connection->io_path_acquired = %"PRIu32"\n",
                  connection->io_path_acquired);
   
   connection->io_path_acquired = FALSE;
@@ -2046,7 +2046,7 @@ _dbus_connection_send_preallocated_unlocked_no_update (DBusConnection       *con
         *client_serial = dbus_message_get_serial (message);
     }
 
-  _dbus_verbose ("Message %p serial is %u\n",
+  _dbus_verbose ("Message %p serial is %"PRIu32"\n",
                  message, dbus_message_get_serial (message));
   
   dbus_message_lock (message);
@@ -2246,7 +2246,7 @@ _dbus_connection_peek_for_reply_unlocked (DBusConnection *connection,
 
       if (dbus_message_get_reply_serial (reply) == client_serial)
         {
-          _dbus_verbose ("%s reply to %d found in queue\n", _DBUS_FUNCTION_NAME, client_serial);
+          _dbus_verbose ("%s reply to %"PRIu32" found in queue\n", _DBUS_FUNCTION_NAME, client_serial);
           return TRUE;
         }
       link = _dbus_list_get_next_link (&connection->incoming_messages, link);
@@ -2411,7 +2411,7 @@ _dbus_connection_block_pending_call (DBusPendingCall *pending)
     {
       timeout_milliseconds = dbus_timeout_get_interval (timeout);
 
-      _dbus_verbose ("dbus_connection_send_with_reply_and_block(): will block %d milliseconds for reply serial %u from %ld sec %ld usec\n",
+      _dbus_verbose ("dbus_connection_send_with_reply_and_block(): will block %d milliseconds for reply serial %"PRIu32" from %ld sec %ld usec\n",
                      timeout_milliseconds,
                      client_serial,
                      start_tv_sec, start_tv_usec);
@@ -2420,7 +2420,7 @@ _dbus_connection_block_pending_call (DBusPendingCall *pending)
     {
       timeout_milliseconds = -1;
 
-      _dbus_verbose ("dbus_connection_send_with_reply_and_block(): will block for reply serial %u\n", client_serial);
+      _dbus_verbose ("dbus_connection_send_with_reply_and_block(): will block for reply serial %"PRIu32"\n", client_serial);
     }
 
   /* check to see if we already got the data off the socket */
@@ -3994,7 +3994,7 @@ _dbus_connection_pop_message_link_unlocked (DBusConnection *connection)
       link = _dbus_list_pop_first_link (&connection->incoming_messages);
       connection->n_incoming -= 1;
 
-      _dbus_verbose ("Message %p (%s %s %s %s sig:'%s' serial:%u) removed from incoming queue %p, %d incoming\n",
+      _dbus_verbose ("Message %p (%s %s %s %s sig:'%s' serial:%"PRIu32") removed from incoming queue %p, %d incoming\n",
                      link->data,
                      dbus_message_type_to_string (dbus_message_get_type (link->data)),
                      dbus_message_get_path (link->data) ?
@@ -4275,7 +4275,7 @@ _dbus_connection_get_dispatch_status_unlocked (DBusConnection *connection)
       status = _dbus_transport_get_dispatch_status (connection->transport);
       is_connected = _dbus_transport_get_is_connected (connection->transport);
 
-      _dbus_verbose ("dispatch status = %s is_connected = %d\n",
+      _dbus_verbose ("dispatch status = %s is_connected = %"PRIu32"\n",
                      DISPATCH_STATUS_NAME (status), is_connected);
       
       if (!is_connected)

@@ -98,7 +98,7 @@ profile_print_with_attrs (const char *type, DBusMessage *message,
   printf ("%s\t%ld.%06ld", type, sec, usec);
 
   if (attrs & PROFILE_ATTRIBUTE_FLAG_SERIAL)
-    printf ("\t%u", dbus_message_get_serial (message));
+    printf ("\t%"PRIu32"", dbus_message_get_serial (message));
 
   if (attrs & PROFILE_ATTRIBUTE_FLAG_SENDER)
     printf ("\t%s", TRAP_NULL_STRING (dbus_message_get_sender (message)));
@@ -107,7 +107,7 @@ profile_print_with_attrs (const char *type, DBusMessage *message,
     printf ("\t%s", TRAP_NULL_STRING (dbus_message_get_destination (message)));
 
   if (attrs & PROFILE_ATTRIBUTE_FLAG_REPLY_SERIAL)
-    printf ("\t%u", dbus_message_get_reply_serial (message));
+    printf ("\t%"PRIu32"", dbus_message_get_reply_serial (message));
 
   if (attrs & PROFILE_ATTRIBUTE_FLAG_PATH)
     printf ("\t%s", TRAP_NULL_STRING (dbus_message_get_path (message)));

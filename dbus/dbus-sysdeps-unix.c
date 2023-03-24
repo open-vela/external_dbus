@@ -963,7 +963,7 @@ _dbus_connect_unix_socket (const char     *path,
 
   _DBUS_ASSERT_ERROR_IS_CLEAR (error);
 
-  _dbus_verbose ("connecting to unix socket %s abstract=%d\n",
+  _dbus_verbose ("connecting to unix socket %s abstract=%"PRIi32"\n",
                  path, abstract);
 
 
@@ -1177,7 +1177,7 @@ _dbus_listen_unix_socket (const char     *path,
 
   _DBUS_ASSERT_ERROR_IS_CLEAR (error);
 
-  _dbus_verbose ("listening on unix socket %s abstract=%d\n",
+  _dbus_verbose ("listening on unix socket %s abstract=%"PRIi32"\n",
                  path, abstract);
 
   if (!_dbus_open_unix_socket (&listen_fd, error))
