@@ -874,7 +874,7 @@ _dbus_message_iter_get_args_valist (DBusMessageIter *iter,
           if (idx.u32 >= real->message->n_unix_fds)
             {
               dbus_set_error (error, DBUS_ERROR_INCONSISTENT_MESSAGE,
-                              "Message refers to file descriptor at index %i,"
+                              "Message refers to file descriptor at index %"PRIu32","
                               "but has only %i descriptors attached.\n",
                               idx.u32,
                               real->message->n_unix_fds);
@@ -4552,7 +4552,7 @@ load_message (DBusMessageLoader *loader,
 
   if (n_unix_fds > loader->n_unix_fds)
     {
-      _dbus_verbose("Message contains references to more unix fds than were sent %u != %u\n",
+      _dbus_verbose("Message contains references to more unix fds than were sent %"PRIu32" != %u\n",
                     n_unix_fds, loader->n_unix_fds);
 
       loader->corrupted = TRUE;

@@ -189,7 +189,7 @@ _dbus_pending_call_set_reply_unlocked (DBusPendingCall *pending,
   else
     dbus_message_ref (message);
 
-  _dbus_verbose ("  handing message %p (%s) to pending call serial %u\n",
+  _dbus_verbose ("  handing message %p (%s) to pending call serial %"PRIu32"\n",
                  message,
                  dbus_message_get_type (message) == DBUS_MESSAGE_TYPE_METHOD_RETURN ?
                  "method return" :
