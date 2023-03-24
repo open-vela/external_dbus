@@ -620,7 +620,7 @@ _dbus_keyring_reload (DBusKeyring *keyring,
     {
       if (error && error->name)
         _dbus_verbose ("error is %s: %s\n", error->name, error->message);
-      _dbus_warn ("returning %d but error pointer %p name %s",
+      _dbus_warn ("returning %"PRIu32" but error pointer %p name %s",
                   retval, error, error->name ? error->name : "(none)");
       _dbus_assert_not_reached ("didn't handle errors properly");
     }

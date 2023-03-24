@@ -1387,7 +1387,7 @@ _dbus_verbose_bytes (const unsigned char *data,
       if (_DBUS_ALIGN_ADDRESS (&data[i], 4) == &data[i])
         {
           if (i > 3)
-            _dbus_verbose ("BE: %d LE: %d",
+            _dbus_verbose ("BE: %"PRIu32" LE: %"PRIu32"",
                            _dbus_unpack_uint32 (DBUS_BIG_ENDIAN, &data[i-4]),
                            _dbus_unpack_uint32 (DBUS_LITTLE_ENDIAN, &data[i-4]));
 

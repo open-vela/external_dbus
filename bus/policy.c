@@ -472,7 +472,7 @@ bus_policy_allow_unix_user (BusPolicy        *policy,
 
   dbus_free (group_ids);
 
-  _dbus_verbose ("UID %lu allowed = %d\n", uid, allowed);
+  _dbus_verbose ("UID %lu allowed = %"PRIu32"\n", uid, allowed);
   
   return allowed;
 }
@@ -1120,7 +1120,7 @@ bus_client_policy_check_can_send (BusClientPolicy *policy,
       *log = rule->d.send.log;
       (*toggles)++;
 
-      _dbus_verbose ("  (policy) used rule, allow now = %d\n",
+      _dbus_verbose ("  (policy) used rule, allow now = %"PRIu32"\n",
                      allowed);
     }
 
@@ -1152,7 +1152,7 @@ bus_client_policy_check_can_receive (BusClientPolicy *policy,
    * in the config file, i.e. last rule that applies wins
    */
 
-  _dbus_verbose ("  (policy) checking receive rules, eavesdropping = %d\n", eavesdropping);
+  _dbus_verbose ("  (policy) checking receive rules, eavesdropping = %"PRIu32"\n", eavesdropping);
   *toggles = 0;
   
   allowed = FALSE;
@@ -1335,7 +1335,7 @@ bus_client_policy_check_can_receive (BusClientPolicy *policy,
       allowed = rule->allow;
       (*toggles)++;
 
-      _dbus_verbose ("  (policy) used rule, allow now = %d\n",
+      _dbus_verbose ("  (policy) used rule, allow now = %"PRIu32"\n",
                      allowed);
     }
 

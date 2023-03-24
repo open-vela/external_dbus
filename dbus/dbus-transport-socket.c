@@ -162,7 +162,7 @@ check_write_watch (DBusTransport *transport)
         }
     }
 
-  _dbus_verbose ("check_write_watch(): needed = %d on connection %p watch %p fd = %" DBUS_SOCKET_FORMAT " outgoing messages exist %d\n",
+  _dbus_verbose ("check_write_watch(): needed = %"PRIu32" on connection %p watch %p fd = %" DBUS_SOCKET_FORMAT " outgoing messages exist %"PRIu32"\n",
                  needed, transport->connection, socket_transport->write_watch,
                  _dbus_socket_printable (socket_transport->fd),
                  _dbus_connection_has_messages_to_send_unlocked (transport->connection));
@@ -227,7 +227,7 @@ check_read_watch (DBusTransport *transport)
         }
     }
 
-  _dbus_verbose ("  setting read watch enabled = %d\n", need_read_watch);
+  _dbus_verbose ("  setting read watch enabled = %"PRIu32"\n", need_read_watch);
   _dbus_connection_toggle_watch_unlocked (transport->connection,
                                           socket_transport->read_watch,
                                           need_read_watch);
@@ -348,7 +348,7 @@ exchange_credentials (DBusTransport *transport,
   DBusTransportSocket *socket_transport = (DBusTransportSocket*) transport;
   DBusError error = DBUS_ERROR_INIT;
 
-  _dbus_verbose ("exchange_credentials: do_reading = %d, do_writing = %d\n",
+  _dbus_verbose ("exchange_credentials: do_reading = %"PRIu32", do_writing = %"PRIu32"\n",
                   do_reading, do_writing);
 
   if (do_writing && transport->send_credentials_pending)
@@ -523,7 +523,7 @@ do_writing (DBusTransport *transport)
     }
 
 #if 1
-  _dbus_verbose ("do_writing(), have_messages = %d, fd = %" DBUS_SOCKET_FORMAT "\n",
+  _dbus_verbose ("do_writing(), have_messages = %"PRIu32", fd = %" DBUS_SOCKET_FORMAT "\n",
                  _dbus_connection_has_messages_to_send_unlocked (transport->connection),
                  _dbus_socket_printable (socket_transport->fd));
 #endif
@@ -1003,7 +1003,7 @@ socket_handle_watch (DBusTransport *transport,
            (flags & DBUS_WATCH_WRITABLE))
     {
 #if 1
-      _dbus_verbose ("handling write watch, have_outgoing_messages = %d\n",
+      _dbus_verbose ("handling write watch, have_outgoing_messages = %"PRIu32"\n",
                      _dbus_connection_has_messages_to_send_unlocked (transport->connection));
 #endif
       if (!do_authentication (transport, FALSE, TRUE, NULL))
@@ -1210,7 +1210,7 @@ socket_do_iteration (DBusTransport *transport,
               dbus_bool_t need_write = (poll_fd.revents & _DBUS_POLLOUT) > 0;
 	      dbus_bool_t authentication_completed;
 
-              _dbus_verbose ("in iteration, need_read=%d need_write=%d\n",
+              _dbus_verbose ("in iteration, need_read=%"PRIu32" need_write=%"PRIu32"\n",
                              need_read, need_write);
               do_authentication (transport, need_read, need_write,
 				 &authentication_completed);
