@@ -50,6 +50,13 @@ DBusServerListenResult _dbus_server_listen_socket (DBusAddressEntry  *entry,
                                                    DBusServer       **server_p,
                                                    DBusError         *error);
 
+#ifdef CONFIG_NET_RPMSG
+DBusServer* _dbus_server_new_for_rpmsg_socket     (const char      *name,
+                                                   DBusError       *error);
+DBusServerListenResult _dbus_server_listen_rpmsg_socket (DBusAddressEntry *entry,
+                                                         DBusServer      **server_p,
+                                                         DBusError        *error);
+#endif
 
 void _dbus_server_socket_own_filename (DBusServer *server,
                                        char       *filename);
