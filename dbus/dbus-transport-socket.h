@@ -38,6 +38,11 @@ DBusTransport*          _dbus_transport_new_for_tcp_socket (const char        *h
 DBusTransportOpenResult _dbus_transport_open_socket        (DBusAddressEntry  *entry,
                                                             DBusTransport    **transport_p,
                                                             DBusError         *error);
+#ifdef CONFIG_NET_RPMSG
+DBusTransportOpenResult _dbus_transport_open_rpmsg_socket  (DBusAddressEntry  *entry,
+                                                            DBusTransport    **transport_p,
+                                                            DBusError         *error);
+#endif
 
 DBusTransport* _dbus_transport_new_for_domain_socket (const char       *path,
                                                       dbus_bool_t       abstract,

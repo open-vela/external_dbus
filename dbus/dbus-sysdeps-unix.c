@@ -56,6 +56,9 @@
 #include <sys/wait.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
+#ifdef CONFIG_NET_RPMSG
+#include <netpacket/rpmsg.h>
+#endif
 #include <netdb.h>
 #include <grp.h>
 #include <arpa/inet.h>
@@ -1585,6 +1588,52 @@ out:
   return fd;
 }
 
+#ifdef CONFIG_NET_RPMSG
+DBusSocket
+_dbus_connect_rpmsg_socket (const char     *cpu,
+                            const char     *name,
+                            DBusError      *error)
+{
+  DBusSocket fd = DBUS_SOCKET_INIT;
+  struct sockaddr_rpmsg addr;
+
+  _DBUS_ASSERT_ERROR_IS_CLEAR(error);
+
+  if (!_dbus_open_socket (&fd.fd, AF_RPMSG, SOCK_STREAM, 0, error))
+    {
+      _DBUS_ASSERT_ERROR_IS_SET(error);
+      _dbus_socket_invalidate (&fd);
+      goto out;
+    }
+
+  _DBUS_ASSERT_ERROR_IS_CLEAR(error);
+
+  addr.rp_family = AF_RPMSG;
+  strlcpy (addr.rp_name, name, sizeof(addr.rp_name));
+  strlcpy (addr.rp_cpu, cpu, sizeof(addr.rp_cpu));
+  if (connect (fd.fd, (struct sockaddr*) &addr, sizeof(addr)) < 0)
+    {
+      dbus_set_error (error,
+                      _dbus_error_from_errno (errno),
+                      "Failed to connect to socket %s,%s: %s",
+                      cpu, name, _dbus_strerror (errno));
+      goto out;
+    }
+
+  _dbus_assert (_dbus_socket_is_valid (fd));
+  if (!_dbus_set_fd_nonblocking (fd.fd, error))
+    {
+      goto out;
+    }
+
+  return fd;
+
+out:
+  _dbus_close_socket (&fd, NULL);
+  return fd;
+}
+#endif
+
 /**
  * Creates a socket and binds it to the given path, then listens on
  * the socket. The socket is set to be nonblocking.  In case of port=0
@@ -1871,6 +1920,67 @@ _dbus_listen_tcp_socket (const char     *host,
   dbus_free(listen_fd);
   return -1;
 }
+
+/**
+ * Creates a socket and binds it to the given path, then listens on
+ * the socket. The socket is set to be nonblocking.
+ *
+ * This will set FD_CLOEXEC for the socket returned
+ *
+ * @param name the port name to listen on
+ * @param error return location for errors
+ * @returns the number of listening file descriptors or -1 on error
+ */
+#ifdef CONFIG_NET_RPMSG
+DBusSocket
+_dbus_listen_rpmsg_socket (const char *name,
+                           DBusError  *error)
+{
+  DBusSocket s = DBUS_SOCKET_INIT;
+  struct sockaddr_rpmsg addr;
+  int fd = -1;
+
+  _DBUS_ASSERT_ERROR_IS_CLEAR (error);
+
+  if (!_dbus_open_socket (&fd, AF_RPMSG, SOCK_STREAM, 0, error))
+    {
+      _DBUS_ASSERT_ERROR_IS_SET(error);
+      return s;
+    }
+
+  memset (&addr, 0, sizeof(addr));
+  strlcpy (addr.rp_name, name, sizeof(addr.rp_name));
+  addr.rp_family = AF_RPMSG;
+
+  if (bind (fd, (struct sockaddr*) &addr, sizeof(addr)) < 0)
+    {
+      dbus_set_error (error, _dbus_error_from_errno (errno),
+                      "Failed to bind socket \"%s\": %s",
+                      name, _dbus_strerror (errno));
+      _dbus_close (fd, NULL);
+      return s;
+    }
+
+  if (listen (fd, 30 /* backlog */) < 0)
+    {
+      dbus_set_error (error, _dbus_error_from_errno (errno),
+                      "Failed to listen on socket \"%s\": %s",
+                      name, _dbus_strerror (errno));
+      _dbus_close (fd, NULL);
+      return s;
+    }
+
+  if (!_dbus_set_fd_nonblocking (fd, error))
+    {
+      _DBUS_ASSERT_ERROR_IS_SET (error);
+      _dbus_close (fd, NULL);
+      return s;
+    }
+
+  s.fd = fd;
+  return s;
+}
+#endif
 
 static dbus_bool_t
 write_credentials_byte (int             server_fd,

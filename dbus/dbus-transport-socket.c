@@ -1444,6 +1444,72 @@ error:
 }
 
 /**
+ * Creates a new transport for the given cpu and name.
+ *
+ * @param cpu the host to connect to
+ * @param name the port to connect to
+ * @param error location to store reason for failure.
+ * @returns a new transport, or #NULL on failure.
+ */
+#ifdef CONFIG_NET_RPMSG
+DBusTransport*
+_dbus_transport_new_for_rpmsg_socket (const char *cpu,
+                                      const char *name,
+                                      DBusError  *error)
+{
+  DBusSocket fd;
+  DBusTransport *transport;
+  DBusString address;
+
+  _DBUS_ASSERT_ERROR_IS_CLEAR (error);
+
+  if (!_dbus_string_init (&address))
+    {
+      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+      return NULL;
+    }
+
+  if (!_dbus_string_append (&address, "cpu=") ||
+      !_dbus_string_append (&address, cpu))
+    goto error;
+
+  if (!_dbus_string_append (&address, ",name=") ||
+      !_dbus_string_append (&address, name))
+    goto error;
+
+  if ((!_dbus_string_append (&address, ",family=") ||
+       !_dbus_string_append (&address, "AF_RPMSG")))
+    goto error;
+
+  fd = _dbus_connect_rpmsg_socket (cpu, name, error);
+  if (!_dbus_socket_is_valid (fd))
+    {
+      _DBUS_ASSERT_ERROR_IS_SET (error);
+      _dbus_string_free (&address);
+      return NULL;
+    }
+
+  _dbus_verbose ("Successfully connected to rpmsg socket %s:%s\n",
+                 cpu, name);
+
+  transport = _dbus_transport_new_for_socket (fd, NULL, &address);
+  _dbus_string_free (&address);
+  if (transport == NULL)
+    {
+      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+      _dbus_close_socket (&fd, NULL);
+    }
+
+  return transport;
+
+error:
+  _dbus_string_free (&address);
+  dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+  return NULL;
+}
+#endif
+
+/**
  * Opens a TCP socket transport.
  * 
  * @param entry the address entry to try opening as a tcp transport.
@@ -1502,6 +1568,62 @@ _dbus_transport_open_socket(DBusAddressEntry  *entry,
       return DBUS_TRANSPORT_OPEN_NOT_HANDLED;
     }
 }
+
+/**
+ * Opens a rpmsg socket transport.
+ *
+ * @param entry the address entry to try opening as a rpmsg transport.
+ * @param transport_p return location for the opened transport
+ * @param error error to be set
+ * @returns result of the attempt
+ */
+#ifdef CONFIG_NET_RPMSG
+DBusTransportOpenResult
+_dbus_transport_open_rpmsg_socket(DBusAddressEntry  *entry,
+                                  DBusTransport    **transport_p,
+                                  DBusError         *error)
+{
+  const char *method;
+
+  method = dbus_address_entry_get_method (entry);
+  _dbus_assert (method != NULL);
+
+  if (strcmp (method, "rpmsg") == 0)
+    {
+      const char *cpu = dbus_address_entry_get_value (entry, "cpu");
+      const char *name = dbus_address_entry_get_value (entry, "name");
+
+      if (cpu == NULL)
+        {
+          _dbus_set_bad_address (error, method, "cpu", NULL);
+          return DBUS_TRANSPORT_OPEN_BAD_ADDRESS;
+        }
+
+      if (name == NULL)
+        {
+          _dbus_set_bad_address (error, method, "name", NULL);
+          return DBUS_TRANSPORT_OPEN_BAD_ADDRESS;
+        }
+
+      *transport_p = _dbus_transport_new_for_rpmsg_socket (cpu, name, error);
+      if (*transport_p == NULL)
+        {
+          _DBUS_ASSERT_ERROR_IS_SET (error);
+          return DBUS_TRANSPORT_OPEN_DID_NOT_CONNECT;
+        }
+      else
+        {
+          _DBUS_ASSERT_ERROR_IS_CLEAR (error);
+          return DBUS_TRANSPORT_OPEN_OK;
+        }
+    }
+  else
+    {
+      _DBUS_ASSERT_ERROR_IS_CLEAR (error);
+      return DBUS_TRANSPORT_OPEN_NOT_HANDLED;
+    }
+}
+#endif
 
 /**
  * Creates a new transport for the given Unix domain socket

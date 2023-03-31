@@ -520,6 +520,54 @@ failed:
 }
 
 /**
+ * Creates a new server listening on Rpmsg Socket.
+ *
+ * @param name the port to listen on.
+ * @param error location to store reason for failure.
+ * @returns the new server, or #NULL on failure.
+ */
+#ifdef CONFIG_NET_RPMSG
+DBusServer*
+_dbus_server_new_for_rpmsg_socket (const char *name, DBusError *error)
+{
+  DBusServer *server;
+  DBusSocket listen_fd;
+  DBusString address;
+
+  _DBUS_ASSERT_ERROR_IS_CLEAR (error);
+
+  if (!_dbus_string_init (&address))
+    {
+      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+      return NULL;
+    }
+
+  listen_fd = _dbus_listen_rpmsg_socket (name, error);
+
+  if (!_dbus_socket_is_valid (listen_fd))
+    {
+      _DBUS_ASSERT_ERROR_IS_SET (error);
+      _dbus_string_free (&address);
+      return NULL;
+    }
+
+  if (!_dbus_string_append (&address, "rpmsg:name=") ||
+      !_dbus_string_append (&address, name))
+    {
+      dbus_set_error (error, DBUS_ERROR_NO_MEMORY, NULL);
+      _dbus_string_free (&address);
+      return NULL;
+    }
+
+  server = _dbus_server_new_for_socket (&listen_fd, 1, &address, NULL, error);
+
+  _dbus_string_free (&address);
+
+  return server;
+}
+#endif
+
+/**
  * Tries to interpret the address entry for various socket-related
  * addresses (well, currently only tcp and nonce-tcp).
  *
@@ -574,6 +622,62 @@ _dbus_server_listen_socket (DBusAddressEntry *entry,
       return DBUS_SERVER_LISTEN_NOT_HANDLED;
     }
 }
+
+/**
+ * Tries to interpret the address entry for various socket-related
+ * addresses (well, currently only rpmsg socket).
+ *
+ * Sets error if the result is not OK.
+ *
+ * @param entry an address entry
+ * @param server_p a new DBusServer, or #NULL on failure.
+ * @param error location to store rationale for failure on bad address
+ * @returns the outcome
+ *
+ */
+#ifdef CONFIG_NET_RPMSG
+DBusServerListenResult
+_dbus_server_listen_rpmsg_socket (DBusAddressEntry *entry,
+                                  DBusServer      **server_p,
+                                  DBusError        *error)
+{
+  const char *method;
+
+  *server_p = NULL;
+
+  method = dbus_address_entry_get_method (entry);
+
+  if (strcmp (method, "rpmsg") == 0)
+    {
+      const char *name;
+
+      name = dbus_address_entry_get_value (entry, "name");
+      if (name == NULL)
+        {
+          _dbus_set_bad_address (error, method, "name", NULL);
+          return DBUS_SERVER_LISTEN_BAD_ADDRESS;
+        }
+
+      *server_p = _dbus_server_new_for_rpmsg_socket (name, error);
+
+      if (*server_p)
+        {
+          _DBUS_ASSERT_ERROR_IS_CLEAR(error);
+          return DBUS_SERVER_LISTEN_OK;
+        }
+      else
+        {
+          _DBUS_ASSERT_ERROR_IS_SET(error);
+          return DBUS_SERVER_LISTEN_DID_NOT_CONNECT;
+        }
+    }
+  else
+    {
+      _DBUS_ASSERT_ERROR_IS_CLEAR(error);
+      return DBUS_SERVER_LISTEN_NOT_HANDLED;
+    }
+}
+#endif
 
 /**
  * This is a bad hack since it's really unix domain socket

@@ -267,6 +267,13 @@ int _dbus_listen_tcp_socket   (const char     *host,
                                const char    **retfamily,
                                DBusSocket    **fds_p,
                                DBusError      *error);
+#ifdef CONFIG_NET_RPMSG
+DBusSocket _dbus_connect_rpmsg_socket (const char     *cpu,
+                                       const char     *name,
+                                       DBusError      *error);
+DBusSocket _dbus_listen_rpmsg_socket (const char     *name,
+                                      DBusError      *error);
+#endif
 DBusSocket _dbus_accept       (DBusSocket      listen_fd);
 
 dbus_bool_t _dbus_read_credentials_socket (DBusSocket        client_fd,

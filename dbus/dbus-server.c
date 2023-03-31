@@ -526,6 +526,9 @@ static const struct {
                                    DBusError        *error);
 } listen_funcs[] = {
   { _dbus_server_listen_socket }
+#ifdef CONFIG_NET_RPMSG
+  , { _dbus_server_listen_rpmsg_socket }
+#endif
   , { _dbus_server_listen_unix_socket }
   , { _dbus_server_listen_platform_specific }
 #ifdef DBUS_ENABLE_EMBEDDED_TESTS
