@@ -348,6 +348,9 @@ static const struct {
                                     DBusError        *error);
 } open_funcs[] = {
   { _dbus_transport_open_socket },
+#ifdef CONFIG_NET_RPMSG
+  { _dbus_transport_open_rpmsg_socket },
+#endif
   { _dbus_transport_open_unix_socket },
 #ifndef _WIN32
   { _dbus_transport_open_unixexec },
