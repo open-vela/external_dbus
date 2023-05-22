@@ -97,7 +97,7 @@ _dbus_abort (void)
       fprintf (stderr, "  Process %lu sleeping for gdb attach\n", _dbus_pid_for_log ());
       _dbus_sleep_milliseconds (1000 * 180);
     }
-  
+  assert (0);
   abort ();
   _dbus_exit (1); /* in case someone manages to ignore SIGABRT ? */
 }
