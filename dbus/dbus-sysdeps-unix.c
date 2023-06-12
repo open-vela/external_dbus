@@ -4915,11 +4915,7 @@ act_on_fds_3_and_up (void (*func) (int fd))
 
   /* close all inherited fds */
   for (i = 3; i < maxfds; i++)
-#ifdef CONFIG_FDCHECK
-    func (fdcheck_protect(i));
-#else
     func (i);
-#endif
 }
 
 /* Some library implementations of closefrom() are not async-signal-safe,
