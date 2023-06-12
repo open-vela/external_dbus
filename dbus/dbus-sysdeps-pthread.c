@@ -242,7 +242,7 @@ _dbus_platform_condvar_wait_timeout (DBusCondVar               *cond,
   
   end_time.tv_sec = time_now.tv_sec + timeout_milliseconds / 1000;
   end_time.tv_nsec = (time_now.tv_usec + (timeout_milliseconds % 1000) * 1000) * 1000;
-  if (end_time.tv_nsec > 1000*1000*1000)
+  if (end_time.tv_nsec >= 1000*1000*1000)
     {
       end_time.tv_sec += 1;
       end_time.tv_nsec -= 1000*1000*1000;
