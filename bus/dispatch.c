@@ -1002,7 +1002,7 @@ check_hello_message (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Hello", serial, connection);
       goto out;
     }
@@ -1143,7 +1143,7 @@ check_hello_message (BusContext     *context,
   retval = TRUE;
 
  out:
-  _dbus_verbose ("ending - retval = %d\n", retval);
+  _dbus_verbose ("ending - retval = %"PRIu32"\n", retval);
 
   dbus_error_free (&error);
 
@@ -1214,7 +1214,7 @@ check_double_hello_message (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Hello", serial, connection);
       goto out;
     }
@@ -1316,7 +1316,7 @@ check_get_connection_unix_user (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "GetConnectionUnixUser", serial, connection);
       goto out;
     }
@@ -1459,7 +1459,7 @@ check_get_connection_unix_process_id (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "GetConnectionUnixProcessID", serial, connection);
       goto out;
     }
@@ -1631,7 +1631,7 @@ check_add_match (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "AddMatch", serial, connection);
       goto out;
     }
@@ -1925,7 +1925,7 @@ check_nonexistent_service_no_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "StartServiceByName", serial, connection);
       goto out;
     }
@@ -2018,7 +2018,7 @@ check_nonexistent_service_auto_start (BusContext     *context,
 
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -2308,7 +2308,7 @@ check_service_activated (BusContext     *context,
         ; /* Good also */
       else
         {
-          _dbus_warn ("Activation result was %u, no good.",
+          _dbus_warn ("Activation result was %"PRIu32", no good.",
                       activation_result);
           goto out;
         }
@@ -2807,7 +2807,7 @@ check_existent_service_no_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive any messages after %s %d on %p",
+      _dbus_warn ("Did not receive any messages after %s %"PRIu32" on %p",
                   "StartServiceByName", serial, connection);
       goto out;
     }
@@ -3030,7 +3030,7 @@ check_segfault_service_no_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "StartServiceByName", serial, connection);
       goto out;
     }
@@ -3139,7 +3139,7 @@ check_segfault_service_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -3478,7 +3478,7 @@ check_existent_service_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive any messages after auto start %d on %p",
+      _dbus_warn ("Did not receive any messages after auto start %"PRIu32" on %p",
                   serial, connection);
       goto out;
     }
@@ -3666,7 +3666,7 @@ check_launch_service_file_missing (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -3765,7 +3765,7 @@ check_launch_service_user_missing (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -3861,7 +3861,7 @@ check_launch_service_exec_missing (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -3965,7 +3965,7 @@ check_launch_service_service_missing (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -4070,7 +4070,7 @@ check_shell_fail_service_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
                   "Echo message (auto activation)", serial, connection);
       goto out;
     }
@@ -4174,7 +4174,7 @@ check_shell_service_success_auto_start (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive any messages after auto start %d on %p",
+      _dbus_warn ("Did not receive any messages after auto start %"PRIu32" on %p",
                   serial, connection);
       goto out;
     }
@@ -4422,7 +4422,7 @@ check_get_services (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive a reply to %s %d on %p",
+      _dbus_warn ("Did not receive a reply to %s %"PRIu32" on %p",
 		  method, serial, connection);
       goto out;
     }
@@ -4581,7 +4581,7 @@ check_list_services (BusContext     *context,
   message = pop_message_waiting_for_memory (connection);
   if (message == NULL)
     {
-      _dbus_warn ("Did not receive any messages after %s %d on %p",
+      _dbus_warn ("Did not receive any messages after %s %"PRIu32" on %p",
 		  "StartServiceByName", serial, connection);
       goto out;
     }

@@ -355,7 +355,7 @@ check_guards (void       *free_block,
           dbus_uint32_t value = *(dbus_uint32_t *) (void *) &block[i];
           if (value != GUARD_VALUE)
             {
-              _dbus_warn ("Block of %lu bytes from %s had start guard value 0x%ux at %d expected 0x%x",
+              _dbus_warn ("Block of %lu bytes from %s had start guard value 0x%"PRIu32"x at %d expected 0x%x",
                           (long) requested_bytes, source_string (source),
                           value, i, GUARD_VALUE);
               failed = TRUE;
@@ -370,7 +370,7 @@ check_guards (void       *free_block,
           dbus_uint32_t value = *(dbus_uint32_t *) (void *) &block[i];
           if (value != GUARD_VALUE)
             {
-              _dbus_warn ("Block of %lu bytes from %s had end guard value 0x%ux at %d expected 0x%x",
+              _dbus_warn ("Block of %lu bytes from %s had end guard value 0x%"PRIu32"x at %d expected 0x%x",
                           (long) requested_bytes, source_string (source),
                           value, i, GUARD_VALUE);
               failed = TRUE;
