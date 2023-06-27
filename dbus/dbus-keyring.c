@@ -1105,7 +1105,7 @@ _dbus_keyring_test (const char *test_data_dir _DBUS_GNUC_UNUSED)
     {
       if (ring1->keys[i].id != ring2->keys[i].id)
         {
-          fprintf (stderr, "Keyring 1 has first key ID %d and keyring 2 has %d\n",
+          fprintf (stderr, "Keyring 1 has first key ID %"PRIi32" and keyring 2 has %"PRIi32"\n",
                    ring1->keys[i].id, ring2->keys[i].id);
           goto failure;
         }      
