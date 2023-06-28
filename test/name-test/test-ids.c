@@ -18,8 +18,6 @@ die (const char *message)
   exit (1);
 }
 
-static int test_num = 0;
-
 /* This test outputs TAP syntax: http://testanything.org/ */
 int
 main (int    argc,
@@ -29,6 +27,7 @@ main (int    argc,
   DBusConnection *connection;
   char *id;
   char *server_id;
+  int test_num = 0;
 
   if (RUNNING_ON_VALGRIND)
     {
