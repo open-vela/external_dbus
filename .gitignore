@@ -53,3 +53,5 @@ Makefile.in
 __pycache__/
 cscope.out
 tags
+bus/*.wo
+tools/*.wo
