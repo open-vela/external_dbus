@@ -174,7 +174,7 @@ find_subtree_recurse (DBusObjectSubtree  *subtree,
 
   _dbus_assert (!(return_deepest_match && create_if_not_found));
 
-  if (path[0] == NULL)
+  if (path == NULL || path[0] == NULL || path[0][0] == '\0')
     {
 #if VERBOSE_FIND
       _dbus_verbose ("  path exhausted, returning %s\n",
