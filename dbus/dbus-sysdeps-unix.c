@@ -5144,7 +5144,7 @@ _dbus_restore_socket_errno (int saved_errno)
 
 static const char *syslog_tag = "dbus";
 #ifdef HAVE_SYSLOG_H
-static DBusLogFlags log_flags = DBUS_LOG_FLAGS_STDERR;
+static DBusLogFlags log_flags = DBUS_LOG_FLAGS_SYSTEM_LOG;
 #endif
 
 /**
