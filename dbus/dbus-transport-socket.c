@@ -1227,8 +1227,9 @@ socket_do_iteration (DBusTransport *transport,
         }
       else
         {
-          _dbus_verbose ("Error from _dbus_poll(): %s\n",
-                         _dbus_strerror (saved_errno));
+          _dbus_warn("Error from _dbus_poll(): %s: poll ret=%d,fd=%d,events=%u,revents=%u",
+                    _dbus_strerror (saved_errno),
+                    poll_res, poll_fd.fd, (unsigned int)poll_fd.events, (unsigned int)poll_fd.revents);
         }
     }
 
