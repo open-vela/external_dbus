@@ -1180,7 +1180,7 @@ _dbus_listen_unix_socket (const char     *path,
 
   _DBUS_ASSERT_ERROR_IS_CLEAR (error);
 
-  _dbus_verbose ("listening on unix socket %s abstract=%"PRIi32"\n",
+  _dbus_warn ("listening on unix socket %s abstract=%"PRIi32"\n",
                  path, abstract);
 
   if (!_dbus_open_unix_socket (&listen_fd, error))
@@ -1284,6 +1284,7 @@ _dbus_listen_unix_socket (const char     *path,
     _dbus_warn ("Could not set mode 0777 on socket %s", path);
 #endif
 
+  _dbus_warn ("Successfully listen to unix socket %s\n", path);
   s.fd = listen_fd;
   return s;
 }
