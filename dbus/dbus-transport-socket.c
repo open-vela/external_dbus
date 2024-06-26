@@ -1672,7 +1672,7 @@ _dbus_transport_new_for_domain_socket (const char     *path,
       goto failed_0;
     }
 
-  _dbus_verbose ("Successfully connected to unix socket %s\n",
+  _dbus_warn ("Successfully connected to unix socket %s\n",
                  path);
 
   transport = _dbus_transport_new_for_socket (fd, NULL, &address);
