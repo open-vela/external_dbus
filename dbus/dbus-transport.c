@@ -216,7 +216,10 @@ void
 _dbus_transport_finalize_base (DBusTransport *transport)
 {
   if (!transport->disconnected)
-    _dbus_transport_disconnect (transport);
+    {
+      _dbus_warn ("Transport disconnected for socket finalized");
+      _dbus_transport_disconnect (transport);
+    }
 
   if (transport->free_unix_user_data != NULL)
     (* transport->free_unix_user_data) (transport->unix_user_data);
@@ -575,7 +578,7 @@ auth_via_unix_user_function (DBusTransport *transport)
     }
   else
     {
-      _dbus_verbose ("Client UID "DBUS_UID_FORMAT
+      _dbus_warn ("Client UID "DBUS_UID_FORMAT
                      " was rejected, disconnecting\n",
                      _dbus_credentials_get_unix_uid (auth_identity));
       _dbus_transport_disconnect (transport);
@@ -626,7 +629,7 @@ auth_via_windows_user_function (DBusTransport *transport)
     }
   else
     {
-      _dbus_verbose ("Client SID '%s' was rejected, disconnecting\n",
+      _dbus_warn ("Client SID '%s' was rejected, disconnecting\n",
                      _dbus_credentials_get_windows_sid (auth_identity));
       _dbus_transport_disconnect (transport);
     }
@@ -683,7 +686,7 @@ auth_via_default_rules (DBusTransport *transport)
                          (_dbus_credentials_get_windows_sid(our_identity) ?
                           _dbus_credentials_get_windows_sid(our_identity) : "<null>"));
       else
-          _dbus_verbose ("Client authorized as UID "DBUS_UID_FORMAT
+          _dbus_warn ("Client authorized as UID "DBUS_UID_FORMAT
                          " but our UID is "DBUS_UID_FORMAT", disconnecting\n",
                          _dbus_credentials_get_unix_uid(auth_identity),
                          _dbus_credentials_get_unix_uid(our_identity));
@@ -782,7 +785,7 @@ _dbus_transport_try_to_authenticate (DBusTransport *transport)
           if (transport->expected_guid &&
               strcmp (transport->expected_guid, server_guid) != 0)
             {
-              _dbus_verbose ("Client expected GUID '%s' and we got '%s' from the server\n",
+              _dbus_warn ("Client expected GUID '%s' and we got '%s' from the server\n",
                              transport->expected_guid, server_guid);
               _dbus_transport_disconnect (transport);
               _dbus_connection_unref_unlocked (transport->connection);
@@ -1209,7 +1212,7 @@ _dbus_transport_queue_messages (DBusTransport *transport)
 
   if (_dbus_message_loader_get_is_corrupted (transport->loader))
     {
-      _dbus_verbose ("Corrupted message stream, disconnecting\n");
+      _dbus_warn ("Corrupted message stream, disconnecting\n");
       _dbus_transport_disconnect (transport);
     }
 
