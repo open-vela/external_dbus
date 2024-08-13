@@ -2869,7 +2869,7 @@ _dbus_connection_close_possibly_shared_and_unlock (DBusConnection *connection)
 
   HAVE_LOCK_CHECK (connection);
   
-  _dbus_verbose ("Disconnecting %p\n", connection);
+  _dbus_warn ("Disconnecting %p\n", connection);
 
   /* We need to ref because update_dispatch_status_and_unlock will unref
    * the connection if it was shared and libdbus was the only remaining
@@ -4220,7 +4220,7 @@ notify_disconnected_unlocked (DBusConnection *connection)
     {
       DBusList *link;
       
-      _dbus_verbose ("Dropping %d outgoing messages since we're disconnected\n",
+      _dbus_warn ("Dropping %d outgoing messages since we're disconnected\n",
                      connection->n_outgoing);
       
       while ((link = _dbus_list_get_last_link (&connection->outgoing_messages)))
@@ -4238,7 +4238,7 @@ notify_disconnected_and_dispatch_complete_unlocked (DBusConnection *connection)
   
   if (connection->disconnect_message_link != NULL)
     {
-      _dbus_verbose ("Sending disconnect message\n");
+      _dbus_warn ("Sending disconnect message\n");
       
       /* If we have pending calls, queue their timeouts - we want the Disconnected
        * to be the last message, after these timeouts.
