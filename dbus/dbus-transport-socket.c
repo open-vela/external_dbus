@@ -281,7 +281,7 @@ read_data_into_auth (DBusTransport *transport,
         ; /* do nothing, just return FALSE below */
       else
         {
-          _dbus_verbose ("Error reading from remote app: %s\n",
+          _dbus_warn ("Error reading from remote app: %s\n",
                          _dbus_strerror (saved_errno));
           do_io_error (transport);
         }
@@ -292,7 +292,7 @@ read_data_into_auth (DBusTransport *transport,
     {
       _dbus_assert (bytes_read == 0);
       
-      _dbus_verbose ("Disconnected from remote app\n");
+      _dbus_warn ("Disconnected from remote app\n");
       do_io_error (transport);
 
       return FALSE;
@@ -330,7 +330,7 @@ write_data_from_auth (DBusTransport *transport)
         ;
       else
         {
-          _dbus_verbose ("Error writing to remote app: %s\n",
+          _dbus_warn ("Error writing to remote app: %s\n",
                          _dbus_strerror (saved_errno));
           do_io_error (transport);
         }
@@ -360,7 +360,7 @@ exchange_credentials (DBusTransport *transport,
         }
       else
         {
-          _dbus_verbose ("Failed to write credentials: %s\n", error.message);
+          _dbus_warn ("Failed to write credentials: %s\n", error.message);
           dbus_error_free (&error);
           do_io_error (transport);
         }
@@ -383,7 +383,7 @@ exchange_credentials (DBusTransport *transport,
         }
       else
         {
-          _dbus_verbose ("Failed to read credentials %s\n", error.message);
+          _dbus_warn ("Failed to read credentials %s\n", error.message);
           dbus_error_free (&error);
           do_io_error (transport);
         }
@@ -470,7 +470,7 @@ do_authentication (DBusTransport *transport,
           break;
       
         case DBUS_AUTH_STATE_NEED_DISCONNECT:
-          _dbus_verbose (" %s auth state: need to disconnect\n",
+          _dbus_warn (" %s auth state: need to disconnect\n",
                          TRANSPORT_SIDE (transport));
           do_io_error (transport);
           break;
@@ -703,7 +703,7 @@ do_writing (DBusTransport *transport)
             }
           else
             {
-              _dbus_verbose ("Error writing to remote app: %s\n",
+              _dbus_warn ("Error writing to remote app: %s\n",
                              _dbus_strerror (saved_errno));
               do_io_error (transport);
               goto out;
@@ -889,7 +889,7 @@ do_reading (DBusTransport *transport)
         goto out;
       else
         {
-          _dbus_verbose ("Error reading from remote app: %s\n",
+          _dbus_warn ("Error reading from remote app: %s\n",
                          _dbus_strerror (saved_errno));
           do_io_error (transport);
           goto out;
@@ -897,7 +897,7 @@ do_reading (DBusTransport *transport)
     }
   else if (bytes_read == 0)
     {
-      _dbus_verbose ("Disconnected from remote app\n");
+      _dbus_warn ("Disconnected from remote app\n");
       do_io_error (transport);
       goto out;
     }
@@ -964,7 +964,7 @@ socket_handle_watch (DBusTransport *transport,
    */
   if (!(flags & DBUS_WATCH_READABLE) && unix_error_with_read_to_come (transport, watch, flags))
     {
-      _dbus_verbose ("Hang up or error on watch\n");
+      _dbus_warn ("Hang up or error on watch, flags=0x%x\n", flags);
       _dbus_transport_disconnect (transport);
       return TRUE;
     }
@@ -1203,7 +1203,10 @@ socket_do_iteration (DBusTransport *transport,
                                   */
           
           if (poll_fd.revents & _DBUS_POLLERR)
-            do_io_error (transport);
+            {
+              _dbus_warn ("Disconnect for recieve _DBUS_POLLERR");
+              do_io_error (transport);
+            }
           else
             {
               dbus_bool_t need_read = (poll_fd.revents & _DBUS_POLLIN) > 0;
