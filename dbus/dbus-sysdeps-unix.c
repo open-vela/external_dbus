@@ -1723,7 +1723,7 @@ _dbus_listen_tcp_socket (const char     *host,
       if (setsockopt (fd, SOL_SOCKET, SO_REUSEADDR, &reuseaddr, sizeof(reuseaddr))==-1)
         {
           _dbus_warn ("Failed to set socket option \"%s:%s\": %s",
-                      host ? host : "*", port, _dbus_strerror (errno));
+                      host ? host : "*", port ? port : "*", _dbus_strerror (errno));
         }
 
       /* Nagle's algorithm imposes a huge delay on the initial messages
@@ -1732,7 +1732,7 @@ _dbus_listen_tcp_socket (const char     *host,
       if (setsockopt (fd, IPPROTO_TCP, TCP_NODELAY, &tcp_nodelay_on, sizeof (tcp_nodelay_on)) == -1)
         {
           _dbus_warn ("Failed to set TCP_NODELAY socket option \"%s:%s\": %s",
-                      host ? host : "*", port, _dbus_strerror (errno));
+                      host ? host : "*", port ? port : "*", _dbus_strerror (errno));
         }
 
       if (bind (fd, (struct sockaddr*) tmp->ai_addr, tmp->ai_addrlen) < 0)
