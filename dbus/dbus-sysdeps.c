@@ -30,6 +30,7 @@
 #include "dbus-string.h"
 #include "dbus-list.h"
 #include "dbus-misc.h"
+#include "dbus-global.h"
 
 /* NOTE: If you include any unix/windows-specific headers here, you are probably doing something
  * wrong and should be putting some code in dbus-sysdeps-unix.c or dbus-sysdeps-win.c.
@@ -64,6 +65,11 @@ extern char **environ;
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#endif
+
+#ifdef __NuttX__
+#include <pthread.h>
+#include <nuttx/tls.h>
 #endif
 
 /**
@@ -974,6 +980,71 @@ _dbus_combine_tcp_errors (DBusList **sources,
 out:
   _dbus_string_free (&message);
 }
+
+#undef bus_data_slot
+#undef slot_allocator_conn
+#undef notify_user_data_slot
+#undef slot_allocator_pending
+#undef list_pool
+#undef _dbus_current_generation
+
+#if defined(CONFIG_BUILD_FLAT) || defined(CONFIG_BUILD_PROTECTED)
+
+  /* TLS index for dbus_global_t */
+static int dbus_global_tls_index;
+
+/* Init once only by uv_once */
+static void dbus_global_index_alloc(void) {
+  dbus_global_tls_index = task_tls_alloc(dbus_free);
+
+  ASSERT(dbus_global_tls_index >= 0);
+}
+
+dbus_global_t* dbus_global_get(void)
+{
+  static pthread_once_t once_guard = PTHREAD_ONCE_INIT;
+  dbus_global_t* dbus_global = NULL;
+
+  pthread_once(&once_guard, dbus_global_index_alloc);
+
+  dbus_global = (dbus_global_t*)task_tls_get_value(dbus_global_tls_index);
+  if (dbus_global == NULL)
+    {
+    dbus_global = dbus_malloc0(sizeof(dbus_global_t));
+    if (dbus_global != NULL)
+      {
+        DBusDataSlotAllocator allocator =
+          _DBUS_DATA_SLOT_ALLOCATOR_INIT (_DBUS_LOCK_NAME (connection_slots));
+
+        dbus_global->bus_data_slot = -1;
+        dbus_global->notify_user_data_slot = -1;
+        dbus_global->_dbus_current_generation = 1;
+        dbus_global->list_pool = NULL;
+        memcpy(&dbus_global->slot_allocator_conn, &allocator, sizeof(DBusDataSlotAllocator));
+        memcpy(&dbus_global->slot_allocator_pending, &allocator, sizeof(DBusDataSlotAllocator));
+        task_tls_set_value(dbus_global_tls_index, (uintptr_t)dbus_global);
+      }
+    }
+
+  _dbus_assert(dbus_global != NULL);
+  return dbus_global;
+}
+#else
+/* Kernel build should use dbus_global */
+dbus_global_t* dbus_global_get(void)
+{
+  static dbus_global_t dbus_global = {
+    .bus_data_slot = -1,
+    .notify_user_data_slot = -1,
+    ._dbus_current_generation = 1,
+    .list_pool = NULL,
+    .slot_allocator_conn = _DBUS_DATA_SLOT_ALLOCATOR_INIT (_DBUS_LOCK_NAME (connection_slots)),
+    .slot_allocator_pending = _DBUS_DATA_SLOT_ALLOCATOR_INIT (_DBUS_LOCK_NAME (connection_slots)),
+  };
+
+  return &dbus_global;
+}
+#endif
 
 /** @} end of sysdeps */
 

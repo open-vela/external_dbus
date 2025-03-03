@@ -44,6 +44,7 @@
 #include "dbus-threads-internal.h"
 #include "dbus-bus.h"
 #include "dbus-marshal-basic.h"
+#include "dbus-global.h"
 
 #ifdef DBUS_DISABLE_CHECKS
 #define TOOK_LOCK_CHECK(connection)
@@ -5985,8 +5986,7 @@ dbus_connection_list_registered (DBusConnection              *connection,
   return retval;
 }
 
-static DBusDataSlotAllocator slot_allocator =
-  _DBUS_DATA_SLOT_ALLOCATOR_INIT (_DBUS_LOCK_NAME (connection_slots));
+#define slot_allocator slot_allocator_conn
 
 /**
  * Allocates an integer ID to be used for storing application-specific

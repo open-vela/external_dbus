@@ -29,6 +29,7 @@
 #include "dbus-threads.h"
 #include <dbus/dbus-test-tap.h>
 #include <stdlib.h>
+#include "dbus-global.h"
 
 /**
  * @defgroup DBusMemory Memory Allocation
@@ -762,14 +763,6 @@ dbus_free_string_array (char **str_array)
  *
  * @{
  */
-
-/**
- * _dbus_current_generation is used to track each
- * time that dbus_shutdown() is called, so we can
- * reinit things after it's been called. It is simply
- * incremented each time we shut down.
- */
-int _dbus_current_generation = 1;
 
 /**
  * Represents a function to be called on shutdown.

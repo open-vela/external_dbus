@@ -27,6 +27,7 @@
 #include "dbus-mempool.h"
 #include "dbus-threads-internal.h"
 #include <dbus/dbus-test-tap.h>
+#include "dbus-global.h"
 
 /**
  * @defgroup DBusList Linked list
@@ -35,9 +36,6 @@
  *
  * Types and functions related to DBusList.
  */
-
-/* Protected by _DBUS_LOCK (list) */
-static DBusMemPool *list_pool;
 
 /**
  * @defgroup DBusListInternals Linked list implementation details
