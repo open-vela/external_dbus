@@ -38,6 +38,7 @@
 #include "dbus-sysdeps.h"
 #include "dbus-sysdeps-unix.h"
 #endif
+#include "dbus-global.h"
 
 #include <string.h>
 
@@ -497,11 +498,6 @@ set_or_delete_string_field (DBusMessage *message,
 
 /** Avoid caching too many messages */
 #define MAX_MESSAGE_CACHE_SIZE    5
-
-/* Protected by _DBUS_LOCK (message_cache) */
-static DBusMessage *message_cache[MAX_MESSAGE_CACHE_SIZE];
-static int message_cache_count = 0;
-static dbus_bool_t message_cache_shutdown_registered = FALSE;
 
 static void
 dbus_message_cache_shutdown (void *data)

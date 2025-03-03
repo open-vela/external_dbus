@@ -30,6 +30,7 @@
 #include "dbus-list.h"
 #include "dbus-threads.h"
 #include "dbus-test.h"
+#include "dbus-global.h"
 
 /**
  * @defgroup DBusPendingCallInternals DBusPendingCall implementation details
@@ -100,9 +101,6 @@ _dbus_pending_call_trace_ref (DBusPendingCall *pending_call,
       new_refcount, why, "DBUS_PENDING_CALL_TRACE", &enabled);
 #endif
 }
-
-/* protected by _DBUS_LOCK_pending_call_slots */
-static dbus_int32_t notify_user_data_slot = -1;
 
 /**
  * Creates a new pending reply object.
@@ -509,8 +507,7 @@ _dbus_pending_call_get_completed_unlocked (DBusPendingCall    *pending)
   return pending->completed;
 }
 
-static DBusDataSlotAllocator slot_allocator =
-  _DBUS_DATA_SLOT_ALLOCATOR_INIT (_DBUS_LOCK_NAME (pending_call_slots));
+#define slot_allocator slot_allocator_pending
 
 /**
  * Stores a pointer on a #DBusPendingCall, along
