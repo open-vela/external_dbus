@@ -32,6 +32,7 @@
 #include "dbus-threads-internal.h"
 #include "dbus-connection-internal.h"
 #include "dbus-string.h"
+#include "dbus-global.h"
 
 /**
  * @defgroup DBusBus Message bus APIs
@@ -81,11 +82,6 @@ typedef struct
 
   unsigned int is_well_known : 1; /**< Is one of the well-known connections in our global array */
 } BusData;
-
-/** The slot we have reserved to store BusData.
- * Protected by _DBUS_LOCK_connection_slots.
- */
-static dbus_int32_t bus_data_slot = -1;
 
 /** Number of bus types */
 #define N_BUS_TYPES 3

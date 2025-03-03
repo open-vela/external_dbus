@@ -25,9 +25,7 @@
 #include "dbus-internals.h"
 #include "dbus-threads-internal.h"
 #include "dbus-list.h"
-
-/* Protected by _dbus_threads_lock_platform_specific() */
-static int thread_init_generation = 0;
+#include "dbus-global.h"
 
 /**
  * @defgroup DBusThreadsInternals Thread functions
@@ -283,9 +281,6 @@ _dbus_condvar_wake_one (DBusCondVar *cond)
 
   _dbus_platform_condvar_wake_one (cond);
 }
-
-/* Protected by _dbus_threads_lock_platform_specific() */
-static DBusRMutex *global_locks[_DBUS_N_GLOBAL_LOCKS] = { NULL };
 
 static void
 shutdown_global_locks (void *nil)

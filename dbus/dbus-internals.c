@@ -28,6 +28,7 @@
 #include "dbus-test.h"
 #include "dbus-test-tap.h"
 #include "dbus-valgrind-internal.h"
+#include "dbus-global.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
