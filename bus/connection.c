@@ -40,7 +40,7 @@
 #include <dbus/dbus-internals.h>
 
 /* Trim executed commands to this length; we want to keep logs readable */
-#define MAX_LOG_COMMAND_LEN 50
+#define MAX_LOG_COMMAND_LEN 256
 
 static void bus_connection_remove_transactions (DBusConnection *connection);
 
