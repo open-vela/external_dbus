@@ -70,7 +70,7 @@ extern char **environ;
 
 #ifdef __NuttX__
 #include <pthread.h>
-#include <nuttx/tls.h>
+#include <nuttx/tls_task.h>
 #endif
 
 /**
