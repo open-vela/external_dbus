@@ -1202,9 +1202,9 @@ socket_do_iteration (DBusTransport *transport,
                                   * is guaranteed on linux at least.
                                   */
           
-          if (poll_fd.revents & _DBUS_POLLERR)
+          if (poll_fd.revents & (_DBUS_POLLERR | _DBUS_POLLHUP))
             {
-              _dbus_warn ("Disconnect for recieve _DBUS_POLLERR");
+              _dbus_warn ("Disconnect for recieve _DBUS_POLLERR or _DBUS_POLLHUP");
               do_io_error (transport);
             }
           else
